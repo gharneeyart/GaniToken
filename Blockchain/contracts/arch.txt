@@ -1,0 +1,33 @@
+Step 2: Write the Contract
+Create contracts/FaucetToken.sol. The logic to build in order:
+
+Inherit from OpenZeppelin — ERC20, Ownable. This gives you all standard functions for free (transfer, approve, balanceOf, etc).
+Declare constants and state:
+
+uint256 public constant MAX_SUPPLY = 10_000_000 * 10**18;
+uint256 public constant CLAIM_AMOUNT = 100 * 10**18;
+uint256 public constant COOLDOWN = 24 hours;
+mapping(address => uint256) public lastClaimed; — this is the key for per-user cooldowns
+
+
+requestToken() — check block.timestamp - lastClaimed[msg.sender] >= COOLDOWN, revert if not, the and update lastClaimed[msg.sender] = block.timestamp.
+mint(address to, uint256 amount) — add onlyOwner modifier, check totalSupply() + amount <= MAX_SUPPLY, then _mint(to, amount).
+Constructor — pass name and symbol to ERC20(...), pass msg.sender to Ownable(...). Optionally mint a small initial supply.
+
+Step 3: Write Tests
+Create test/FaucetToken.test.ts. Cover these cases in order:
+For requestToken():
+
+User can claim on first call
+User balance increases by exactly CLAIM_AMOUNT
+Second immediate call reverts with your error message
+After manipulating block.timestamp by 24+ hours (use ethers.provider.send("evm_increaseTime", [86401])), second claim succeeds
+Two different users can both claim without affecting each other's cooldown
+
+For mint():
+
+Owner can mint to any address
+Minted balance reaches recipient correctly
+Non-owner call reverts
+Minting past MAX_SUPPLY reverts
+Minting exactly to MAX_SUPPLY succeeds
