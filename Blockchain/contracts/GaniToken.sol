@@ -19,14 +19,14 @@ contract GaniToken is ERC20, Ownable{
 
     mapping(address => uint256) public lastClaimed;
 
-    constructor( address initialOwner, uint256 initialSupply) ERC20("GaniToken", "GSK") Ownable(initialOwner) {
-        if (initialSupply > 0) {
-            if (initialSupply > MAX_SUPPLY) {
-                revert ExceedsMaxSupply(initialSupply, MAX_SUPPLY);
-            }
-            _mint(initialOwner, initialSupply);
+   constructor(uint256 initialSupply) ERC20("GaniToken", "GSK") Ownable(msg.sender) {
+    if (initialSupply > 0) {
+        if (initialSupply > MAX_SUPPLY) {
+            revert ExceedsMaxSupply(initialSupply, MAX_SUPPLY);
         }
+        _mint(msg.sender, initialSupply);
     }
+}
 
     function requestToken() external {
         address claimant = msg.sender;

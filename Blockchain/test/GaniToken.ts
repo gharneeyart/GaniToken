@@ -16,7 +16,7 @@ describe("GaniToken", function(){
         const [owner, gani, hali, feyi] = await hre.ethers.getSigners();
 
         const GaniToken = await hre.ethers.getContractFactory("GaniToken");
-        const token = await GaniToken.deploy(owner.address, INITIAL_SUPPLY);
+        const token = await GaniToken.deploy(INITIAL_SUPPLY);
 
         return { token, owner, gani, hali, feyi };
     }
@@ -34,13 +34,11 @@ describe("GaniToken", function(){
             expect(await token.COOLDOWN()).to.equal(COOLDOWN);
         });
 
-        it("Should check if initial supply is more than max_supply", async ()=> {
-            const [deployer] = await hre.ethers.getSigners();
-            const Factory = await hre.ethers.getContractFactory("GaniToken");
-            const over = MAX_SUPPLY + 1n;
+       it("Should check if initial supply is more than max_supply", async () => {
+        const Factory = await hre.ethers.getContractFactory("GaniToken");
+        const over = MAX_SUPPLY + 1n;
 
-            await expect(Factory.deploy(deployer.address, over)).to.be.revertedWithCustomError(await Factory.deploy(deployer.address, 0n), "ExceedsMaxSupply");
-        });
+        await expect(Factory.deploy(over)).to.be.revertedWithCustomError(Factory, "ExceedsMaxSupply")});
 
         it("Should check initialSupply and totalSupply", async ()=> {
             const { token, owner } = await loadFixture(deployGaniToken);
