@@ -1,7 +1,3 @@
-// ============================================================
-// CONSTANTS — Replace these with your deployed contract values
-// ============================================================
-
 export const CONTRACT_ADDRESS = '0x0000000000000000000000000000000000000000' as const;
 
 export const MAX_SUPPLY = BigInt('10000000000000000000000000'); // 10,000,000 * 10^18

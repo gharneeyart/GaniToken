@@ -1,7 +1,3 @@
-// ============================================================
-// FORMATTERS — Pure utility functions, no contract deps
-// ============================================================
-
 /**
  * Format a bigint token amount to a human-readable string
  * @param amount  raw bigint (e.g. from contract)
