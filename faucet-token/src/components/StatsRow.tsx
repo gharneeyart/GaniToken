@@ -1,7 +1,7 @@
 import { Coins, TrendingUp, Clock, Crown } from 'lucide-react';
 import { StatCard } from './ui/StatCard';
 import { formatTokenAmount, supplyPercent } from '../lib/utils';
-import { useReadToken } from '../hooks/specific/useReadTokenContract';
+import { useTokenContext } from '../contexts/TokenContext';
 import useRunners from '../hooks/useRunner';
 
 export function StatsRow() {
@@ -15,7 +15,7 @@ export function StatsRow() {
     owner,
     claimAmount,
     isLoading,
-  } = useReadToken();
+  } = useTokenContext();
 
   const isOwner = address?.toLowerCase() === owner?.toLowerCase();
   const pct = supplyPercent(totalSupply, maxSupply);

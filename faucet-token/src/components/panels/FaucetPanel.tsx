@@ -6,9 +6,10 @@ import { Badge } from '../ui/Badge';
 import { cn } from '../../lib/utils';
 import toast from 'react-hot-toast';
 import useRunners from '../../hooks/useRunner';
-import { useReadToken, useCooldown } from '../../hooks/specific/useReadTokenContract';
+import { useCooldown } from '../../hooks/specific/useReadTokenContract';
 import { useRequestToken } from '../../hooks/specific/useWriteTokenContract';
 import { formatTokenAmount } from '../../lib/utils';
+import { useTokenContext } from '../../contexts/TokenContext';
 
 interface FaucetPanelProps {
   onSuccess: () => void;
@@ -16,7 +17,7 @@ interface FaucetPanelProps {
 
 export function FaucetPanel({ onSuccess }: FaucetPanelProps) {
   const {isConnected} = useRunners();
-  const {lastClaimed, cooldown, symbol, claimAmount, decimals} = useReadToken();
+  const {lastClaimed, cooldown, symbol, claimAmount, decimals} = useTokenContext();
   const cooldownSeconds = useCooldown(
     lastClaimed,
     cooldown ?? 86400

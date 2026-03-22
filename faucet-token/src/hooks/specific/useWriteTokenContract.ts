@@ -1,8 +1,6 @@
-import { useAppKitAccount } from "@reown/appkit/react";
 import { useTokenContract } from "../useContract";
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, useState } from "react";
 import { ErrorDecoder } from "ethers-decode-error";
-import { ethers } from "ethers";
 import type { TransactionStatus } from "../../types";
 
 const errorDecoder = ErrorDecoder.create();
@@ -14,7 +12,7 @@ export interface UseRequestTokenReturn {
 }
 
 export function useRequestToken(onSuccess?: () => void): UseRequestTokenReturn {
-  const tokenContract = useTokenContract(true); // true = with signer
+  const tokenContract = useTokenContract(true);
   const [status, setStatus] = useState<TransactionStatus>({ hash: null, status: 'idle' });
 
   const requestToken = useCallback(async () => {

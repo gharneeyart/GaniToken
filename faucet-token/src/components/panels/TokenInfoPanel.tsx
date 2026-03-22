@@ -6,7 +6,8 @@ import { Skeleton } from '../ui/Skeleton';
 import { shortenAddress, formatTokenAmount, supplyPercent } from '../../lib/utils';
 import { BLOCK_EXPLORER_URL, CONTRACT_ADDRESS } from '../../constants';
 import toast from 'react-hot-toast';
-import { useReadToken } from '../../hooks/specific/useReadTokenContract';
+import { useTokenContext } from '../../contexts/TokenContext';
+
 
 
 function InfoRow({
@@ -37,7 +38,7 @@ function InfoRow({
 }
 
 export function TokenInfoPanel() {
-  const {owner,name, isLoading, claimAmount, decimals, symbol, maxSupply, totalSupply} = useReadToken();
+  const {owner,name, isLoading, claimAmount, decimals, symbol, maxSupply, totalSupply} = useTokenContext();
   const pct = supplyPercent(totalSupply, maxSupply);
 
 

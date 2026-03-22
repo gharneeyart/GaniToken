@@ -4,7 +4,7 @@ import { Dashboard } from './components/Dashboard';
 import { ConnectPrompt } from './components/ConnectPrompt';
 import useRunners from './hooks/useRunner';
 import "./connection";
-
+import { TokenProvider } from './contexts/TokenContext';
 
 export default function App() {
   const {address, isConnected} = useRunners();
@@ -19,7 +19,9 @@ export default function App() {
 
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
         {isConnected && address ? (
-          <Dashboard  />
+          <TokenProvider>
+            <Dashboard />
+          </TokenProvider>
         ) : (
           <ConnectPrompt />
         )}

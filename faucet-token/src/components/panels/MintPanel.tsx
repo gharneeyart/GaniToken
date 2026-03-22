@@ -9,8 +9,9 @@ import { SupplyBar } from '../ui/SupplyBar';
 import { isValidAddress, formatTokenAmount, supplyPercent } from '../../lib/utils';
 import toast from 'react-hot-toast';
 import { useMint } from '../../hooks/specific/useWriteTokenContract';
-import { useReadToken } from '../../hooks/specific/useReadTokenContract';
 import useRunners from '../../hooks/useRunner';
+import { useTokenContext } from '../../contexts/TokenContext';
+
 
 
 interface MintPanelProps {
@@ -19,7 +20,7 @@ interface MintPanelProps {
 
 export function MintPanel({ onSuccess }: MintPanelProps) {
   const {address, isConnected, } = useRunners();
-  const {owner, symbol, decimals, maxSupply, totalSupply} = useReadToken();
+  const {owner, symbol, decimals, maxSupply, totalSupply} = useTokenContext();
   const [recipient, setRecipient] = useState('');
   const [amountStr, setAmountStr] = useState('');
 

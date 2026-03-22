@@ -8,8 +8,8 @@ import { Badge } from '../ui/Badge';
 import { isValidAddress, formatTokenAmount } from '../../lib/utils';
 import toast from 'react-hot-toast';
 import { useTransfer } from '../../hooks/specific/useWriteTokenContract';
-import { useReadToken } from '../../hooks/specific/useReadTokenContract';
 import useRunners from '../../hooks/useRunner';
+import { useTokenContext } from '../../contexts/TokenContext';
 
 interface TransferPanelProps {
   onSuccess: () => void;
@@ -17,7 +17,7 @@ interface TransferPanelProps {
 
 export function TransferPanel({ onSuccess }: TransferPanelProps) {
   const {isConnected} = useRunners();
-  const {symbol, decimals, balance} = useReadToken();
+  const {symbol, decimals, balance} = useTokenContext();
   const [recipient, setRecipient] = useState('');
   const [amountStr, setAmountStr] = useState('');
 

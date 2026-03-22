@@ -1,13 +1,11 @@
-import { useAppKitAccount } from "@reown/appkit/react";
 import { useTokenContract } from "../useContract";
 import { useCallback, useEffect, useState } from "react";
 import useRunners from "../useRunner";
 import type { ActivityItem } from "../../types";
 
-// --------------- useReadToken ---------------
 export const useReadToken = () => {
   const tokenContract = useTokenContract();
-  const { address } = useAppKitAccount();
+  const { address } = useRunners();
 
   const [decimals, setDecimals] = useState<number>(18);
   const [balance, setBalance] = useState<bigint>(0n);
@@ -88,7 +86,7 @@ export const useReadToken = () => {
   };
 };
 
-// --------------- useActivity ---------------
+
 export const useActivity = () => {
   const tokenContract = useTokenContract();
   const { address } = useRunners();
@@ -147,7 +145,6 @@ export const useActivity = () => {
         })),
       ];
 
-      // Sort by most recent first
       setItems(allItems.sort((a, b) => b.timestamp - a.timestamp));
     } catch (error) {
       console.error("Error fetching activity:", error);
