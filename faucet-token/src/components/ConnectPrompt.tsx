@@ -1,10 +1,6 @@
 import { Wallet, Zap, Shield, Clock } from 'lucide-react';
 import { Button } from './ui/Button';
-import type { UseWalletReturn } from '../hooks';
-
-interface ConnectPromptProps {
-  wallet: UseWalletReturn;
-}
+import { useAppKit, useAppKitAccount } from "@reown/appkit/react";
 
 const features = [
   { icon: Zap, text: 'Claim 100 GSK every 24 hours' },
@@ -12,7 +8,12 @@ const features = [
   { icon: Clock, text: 'Per-wallet cooldown tracking' },
 ];
 
-export function ConnectPrompt({ wallet }: ConnectPromptProps) {
+export function ConnectPrompt() {
+  const { open, } = useAppKit();
+  const { status } = useAppKitAccount();
+
+  const isConnecting = status === 'connecting' || status === 'reconnecting';
+
   return (
     <div className="flex flex-col items-center justify-center min-h-[40vh] py-16 text-center animate-fade-in">
       {/* Glow orb background */}
@@ -27,7 +28,7 @@ export function ConnectPrompt({ wallet }: ConnectPromptProps) {
         Connect your wallet
       </h2>
       <p className="text-sm text-text-secondary font-body max-w-sm mb-8 leading-relaxed">
-        Connect to Lisk Sepolia testnet to interact with the GaniToken contract
+        Connect to Sepolia testnet to interact with the GaniToken contract
       </p>
 
       {/* Features */}
@@ -46,9 +47,9 @@ export function ConnectPrompt({ wallet }: ConnectPromptProps) {
       <Button
         variant="emerald"
         size="lg"
-        isLoading={wallet.isConnecting}
+        isLoading={isConnecting}
         loadingText="Connecting…"
-        onClick={wallet.connect}
+        onClick={() => open()}
         className="px-8"
       >
         <Wallet className="w-4 h-4" />

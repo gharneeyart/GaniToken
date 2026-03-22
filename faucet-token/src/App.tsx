@@ -2,10 +2,14 @@ import { Toaster } from 'react-hot-toast';
 import { Navbar } from './components/Navbar';
 import { Dashboard } from './components/Dashboard';
 import { ConnectPrompt } from './components/ConnectPrompt';
-import { useWallet } from './hooks';
+import useRunners from './hooks/useRunner';
+import "./connection";
+
 
 export default function App() {
-  const wallet = useWallet();
+  const {address, isConnected} = useRunners();
+
+ 
 
   return (
     <div className="min-h-screen bg-surface-0 grid-noise relative">
@@ -13,13 +17,13 @@ export default function App() {
       <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-emerald-400/3 blur-[80px] rounded-full pointer-events-none" />
       <div className="fixed bottom-0 right-0 w-[400px] h-[300px] bg-violet-400/3 blur-[100px] rounded-full pointer-events-none" />
 
-      <Navbar wallet={wallet} />
+      <Navbar/>
 
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
-        {wallet.isConnected && wallet.address ? (
-          <Dashboard address={wallet.address} />
+        {isConnected && address ? (
+          <Dashboard address={address} />
         ) : (
-          <ConnectPrompt wallet={wallet} />
+          <ConnectPrompt />
         )}
       </main>
 

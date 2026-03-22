@@ -24,11 +24,7 @@ export function Dashboard({ address }: DashboardProps) {
   return (
     <div className="space-y-4 animate-fade-in">
       {/* Stats row */}
-      <StatsRow
-        tokenInfo={tokenInfo}
-        userState={userState}
-        isLoading={tokenLoading || userLoading}
-      />
+      <StatsRow/>
 
       {/* Main grid: 3 columns on lg, 1 on mobile */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

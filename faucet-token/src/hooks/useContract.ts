@@ -4,7 +4,7 @@ import { getAddress } from "ethers";
 import useRunners from "./useRunner";
 import { TOKEN_ABI } from "../ABI/token";
 
-export const useTodoContract = (withSigner = false) => {
+export const useTokenContract = (withSigner = false) => {
   const { readOnlyProvider, signer } = useRunners();
 
   return useMemo(() => {

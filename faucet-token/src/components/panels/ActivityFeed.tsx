@@ -15,12 +15,7 @@ import { shortenAddress, formatTokenAmount, timeAgo } from '../../lib/utils';
 import { BLOCK_EXPLORER_URL } from '../../constants';
 import { cn } from '../../lib/utils';
 import type { ActivityItem, ActivityTab } from '../../types';
-
-interface ActivityFeedProps {
-  items: ActivityItem[];
-  isLoading: boolean;
-  onRefresh: () => void;
-}
+import { useActivity } from '../../hooks/specific/useReadTokenContract';
 
 const TABS: { key: ActivityTab; label: string }[] = [
   { key: 'all', label: 'All' },
@@ -106,7 +101,8 @@ function ActivityRow({ item }: { item: ActivityItem }) {
   );
 }
 
-export function ActivityFeed({ items, isLoading, onRefresh }: ActivityFeedProps) {
+export function ActivityFeed() {
+  const { items, isLoading, refetch } = useActivity();
   const [activeTab, setActiveTab] = useState<ActivityTab>('all');
 
   const filtered = items.filter((item) => {
@@ -125,7 +121,7 @@ export function ActivityFeed({ items, isLoading, onRefresh }: ActivityFeedProps)
           Activity
         </CardTitle>
         <button
-          onClick={onRefresh}
+          onClick={refetch}
           className="p-1.5 rounded-lg hover:bg-white/8 transition-colors text-text-tertiary hover:text-text-secondary"
         >
           <RefreshCw className="w-3.5 h-3.5" />

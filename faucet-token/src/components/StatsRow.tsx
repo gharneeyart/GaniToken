@@ -1,33 +1,42 @@
 import { Coins, TrendingUp, Clock, Crown } from 'lucide-react';
 import { StatCard } from './ui/StatCard';
 import { formatTokenAmount, supplyPercent } from '../lib/utils';
-import type { TokenInfo, UserState } from '../types';
+import { useReadToken } from '../hooks/specific/useReadTokenContract';
+import useRunners from '../hooks/useRunner';
 
-interface StatsRowProps {
-  tokenInfo: TokenInfo | null;
-  userState: UserState;
-  isLoading: boolean;
-}
+export function StatsRow() {
+  const {address} = useRunners();
+  const {
+    balance,
+    totalSupply,
+    maxSupply,
+    symbol,
+    decimals,
+    owner,
+    claimAmount,
+    isLoading,
+  } = useReadToken();
 
-export function StatsRow({ tokenInfo, userState, isLoading }: StatsRowProps) {
-  const totalSupply = tokenInfo ? formatTokenAmount(tokenInfo.totalSupply, tokenInfo.decimals, 0) : '—';
-  const balance = formatTokenAmount(userState.balance, 18, 2);
-  const pct = tokenInfo ? supplyPercent(tokenInfo.totalSupply, tokenInfo.maxSupply) : 0;
-  const symbol = tokenInfo?.symbol ?? 'GSK';
+  const isOwner = address?.toLowerCase() === owner?.toLowerCase();
+  const pct = supplyPercent(totalSupply, maxSupply);
+  console.log(decimals);
+  console.log(symbol);
+  
+  
 
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
       <StatCard
         label="Your Balance"
-        value={`${balance} ${symbol}`}
+        value={`${formatTokenAmount(balance, decimals, 2)} ${symbol}`}
         sub="Available to transfer"
         icon={Coins}
         accent="emerald"
-        isLoading={isLoading || !userState.isConnected}
+        isLoading={isLoading}
       />
       <StatCard
         label="Total Supply"
-        value={totalSupply}
+        value={formatTokenAmount(totalSupply, decimals, 2)}
         sub={`${pct.toFixed(1)}% of max supply`}
         icon={TrendingUp}
         accent="amber"
@@ -35,7 +44,7 @@ export function StatsRow({ tokenInfo, userState, isLoading }: StatsRowProps) {
       />
       <StatCard
         label="Claim Amount"
-        value={`100 ${symbol}`}
+        value={`${formatTokenAmount(claimAmount, decimals, 0)} ${symbol}`}
         sub="Per wallet per 24 hours"
         icon={Clock}
         accent="neutral"
@@ -43,11 +52,11 @@ export function StatsRow({ tokenInfo, userState, isLoading }: StatsRowProps) {
       />
       <StatCard
         label="Contract Owner"
-        value={userState.isOwner ? 'You' : 'Other'}
-        sub={userState.isOwner ? 'Mint access enabled' : 'No mint access'}
+        value={isOwner ? 'You' : 'Other'}
+        sub={isOwner ? 'Mint access enabled' : 'No mint access'}
         icon={Crown}
-        accent={userState.isOwner ? 'violet' : 'neutral'}
-        isLoading={isLoading || !userState.isConnected}
+        accent={isOwner ? 'violet' : 'neutral'}
+        isLoading={isLoading}
       />
     </div>
   );

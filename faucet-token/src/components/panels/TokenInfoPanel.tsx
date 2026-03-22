@@ -5,13 +5,9 @@ import { SupplyRing } from '../ui/SupplyBar';
 import { Skeleton } from '../ui/Skeleton';
 import { shortenAddress, formatTokenAmount, supplyPercent } from '../../lib/utils';
 import { BLOCK_EXPLORER_URL, CONTRACT_ADDRESS } from '../../constants';
-import type { TokenInfo } from '../../types';
 import toast from 'react-hot-toast';
+import { useReadToken } from '../../hooks/specific/useReadTokenContract';
 
-interface TokenInfoPanelProps {
-  tokenInfo: TokenInfo | null;
-  isLoading: boolean;
-}
 
 function InfoRow({
   label,
@@ -40,10 +36,10 @@ function InfoRow({
   );
 }
 
-export function TokenInfoPanel({ tokenInfo, isLoading }: TokenInfoPanelProps) {
-  const pct = tokenInfo
-    ? supplyPercent(tokenInfo.totalSupply, tokenInfo.maxSupply)
-    : 0;
+export function TokenInfoPanel() {
+  const {owner,name, isLoading, claimAmount, decimals, symbol, maxSupply, totalSupply} = useReadToken();
+  const pct = supplyPercent(totalSupply, maxSupply);
+
 
   const copyAddress = () => {
     navigator.clipboard.writeText(CONTRACT_ADDRESS);
@@ -76,9 +72,9 @@ export function TokenInfoPanel({ tokenInfo, isLoading }: TokenInfoPanelProps) {
           ) : (
             <>
               <p className="font-display text-lg font-semibold text-text-primary leading-none">
-                {tokenInfo?.name ?? '—'}
+                {name || '—'}
               </p>
-              <p className="font-mono text-sm text-emerald-400">{tokenInfo?.symbol ?? '—'}</p>
+              <p className="font-mono text-sm text-emerald-400">{symbol || '—'}</p>
             </>
           )}
         </div>
@@ -87,49 +83,31 @@ export function TokenInfoPanel({ tokenInfo, isLoading }: TokenInfoPanelProps) {
       <div className="space-y-0">
         <InfoRow
           label="Decimals"
-          value={tokenInfo?.decimals.toString() ?? '18'}
+          value={decimals.toString()}
           mono
           isLoading={isLoading}
         />
         <InfoRow
           label="Total Supply"
-          value={
-            tokenInfo
-              ? `${formatTokenAmount(tokenInfo.totalSupply, tokenInfo.decimals, 0)} ${tokenInfo.symbol}`
-              : '—'
-          }
+          value={`${formatTokenAmount(totalSupply, decimals, 0)} ${symbol}`}
           mono
           isLoading={isLoading}
         />
         <InfoRow
           label="Max Supply"
-          value={
-            tokenInfo
-              ? `${formatTokenAmount(tokenInfo.maxSupply, tokenInfo.decimals, 0)} ${tokenInfo.symbol}`
-              : '—'
-          }
+          value={`${formatTokenAmount(maxSupply, decimals, 0)} ${symbol}`}
           mono
           isLoading={isLoading}
         />
         <InfoRow
           label="Claim Amount"
-          value={
-            tokenInfo
-              ? `${formatTokenAmount(tokenInfo.claimAmount, tokenInfo.decimals, 0)} ${tokenInfo.symbol}`
-              : '—'
-          }
+          value={`${formatTokenAmount(claimAmount, decimals, 0)} ${symbol}`}
           mono
           isLoading={isLoading}
         />
         <InfoRow
           label="Owner"
-          value={
-            tokenInfo ? (
-              <span className="text-violet-400 font-mono text-xs">
-                {shortenAddress(tokenInfo.owner, 4)}
-              </span>
-            ) : '—'
-          }
+          value={owner ? shortenAddress(owner, 4) : '—'}
           isLoading={isLoading}
         />
       </div>
