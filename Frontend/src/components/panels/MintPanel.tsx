@@ -70,31 +70,6 @@ export function MintPanel({ onSuccess }: MintPanelProps) {
     }
   };
 
-  // Not owner or not connected
-  // if (!isConnected || !isOwner) {
-  //   return (
-  //     <Card className="flex flex-col gap-5">
-  //       <CardHeader>
-  //         <CardTitle dot="violet">Mint Tokens</CardTitle>
-  //         <Badge variant="violet">mint()</Badge>
-  //       </CardHeader>
-  //       <div className="flex flex-col items-center gap-3 py-6 text-center">
-  //         <div className="w-12 h-12 rounded-2xl bg-violet-400/5 border border-violet-400/10 flex items-center justify-center">
-  //           <ShieldAlert className="w-5 h-5 text-violet-400/50" />
-  //         </div>
-  //         <div>
-  //           <p className="text-sm font-mono text-text-secondary">Owner Access Required</p>
-  //           <p className="text-xs text-text-tertiary mt-1">
-  //             {!userState.isConnected
-  //               ? 'Connect your wallet to check ownership'
-  //               : 'Only the contract owner can mint tokens'}
-  //           </p>
-  //         </div>
-  //       </div>
-  //     </Card>
-  //   );
-  // }
-
   return (
     <Card glow="violet" className="flex flex-col gap-5">
       <CardHeader>
