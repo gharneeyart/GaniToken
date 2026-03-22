@@ -7,4 +7,4 @@ export const COOLDOWN_SECONDS = 86400;                          // 24 hours
 export const SUPPORTED_CHAIN_ID = 4202;
 export const SUPPORTED_CHAIN_NAME = 'Lisk Sepolia';
 
-export const BLOCK_EXPLORER_URL = 'https://rpc.sepolia-api.lisk.com';
+export const BLOCK_EXPLORER_URL = 'https://sepolia-blockscout.lisk.com';
