@@ -159,6 +159,44 @@ export const useActivity = () => {
   useEffect(() => {
     fetchActivity();
   }, [fetchActivity]);
+  console.log(items);
+  
 
   return { items, isLoading, refetch: fetchActivity };
 };
+
+export interface UseCooldownReturn {
+  canClaim: boolean;
+  remainingSeconds: number;
+  formattedCountdown: string;
+}
+
+export function useCooldown(lastClaimed: bigint, cooldownSeconds: bigint): UseCooldownReturn {
+  const [remaining, setRemaining] = useState(0);
+
+  useEffect(() => {
+    const compute = () => {
+      const nowSeconds = BigInt(Math.floor(Date.now() / 1000));
+      const elapsed = nowSeconds - lastClaimed;
+      const rem = Number(cooldownSeconds - elapsed);
+      setRemaining(Math.max(0, rem));
+    };
+    compute();
+    const id = setInterval(compute, 1000);
+    return () => clearInterval(id);
+  }, [lastClaimed, cooldownSeconds]);
+
+  const h = Math.floor(remaining / 3600);
+  const m = Math.floor((remaining % 3600) / 60);
+  const s = remaining % 60;
+  const parts: string[] = [];
+  if (h > 0) parts.push(`${h}h`);
+  if (m > 0) parts.push(`${m}m`);
+  parts.push(`${s}s`);
+
+  return {
+    canClaim: remaining === 0,
+    remainingSeconds: remaining,
+    formattedCountdown: remaining > 0 ? parts.join(' ') : 'Ready',
+  };
+}

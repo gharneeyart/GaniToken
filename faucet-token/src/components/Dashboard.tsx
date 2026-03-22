@@ -4,21 +4,26 @@ import { MintPanel } from './panels/MintPanel';
 import { TransferPanel } from './panels/TransferPanel';
 import { TokenInfoPanel } from './panels/TokenInfoPanel';
 import { ActivityFeed } from './panels/ActivityFeed';
-import { useTokenInfo, useUserState, useActivity } from '../hooks';
+import { useTokenInfo, useUserState } from '../hooks';
+import useRunners from '../hooks/useRunner';
+import { useReadToken } from '../hooks/specific/useReadTokenContract';
 
-interface DashboardProps {
-  address: string;
-}
+// interface DashboardProps {
+//   address: string;
+// }
 
-export function Dashboard({ address }: DashboardProps) {
+export function Dashboard() {
+  const {address} = useRunners();
+
+  const {owner} = useReadToken();
   const { data: tokenInfo, isLoading: tokenLoading, refetch: refetchToken } = useTokenInfo();
   const { userState, isLoading: userLoading, refetch: refetchUser } = useUserState(address);
-  const { items: activity, isLoading: activityLoading, refetch: refetchActivity } = useActivity(address);
+
+  const isOwner = address?.toLowerCase() === owner?.toLowerCase();
 
   const handleSuccess = () => {
     refetchToken();
     refetchUser();
-    refetchActivity();
   };
 
   return (
@@ -27,35 +32,29 @@ export function Dashboard({ address }: DashboardProps) {
       <StatsRow/>
 
       {/* Main grid: 3 columns on lg, 1 on mobile */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className={`grid grid-cols-1 md:grid-cols-2 ${isOwner ? "lg:grid-cols-3" : "lg:grid-cols-2"} gap-4`}>
         <FaucetPanel
-          userState={userState}
-          tokenInfo={tokenInfo}
           onSuccess={handleSuccess}
         />
         <TransferPanel
-          userState={userState}
-          tokenInfo={tokenInfo}
           onSuccess={handleSuccess}
         />
+        {isOwner ? 
         <MintPanel
-          userState={userState}
-          tokenInfo={tokenInfo}
           onSuccess={handleSuccess}
-        />
+        /> : ''}
+        
       </div>
 
       {/* Bottom grid: token info + activity */}
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+        {isOwner ? 
         <div className="lg:col-span-2">
-          <TokenInfoPanel tokenInfo={tokenInfo} isLoading={tokenLoading} />
+          <TokenInfoPanel />
         </div>
-        <div className="lg:col-span-3">
-          <ActivityFeed
-            items={activity}
-            isLoading={activityLoading}
-            onRefresh={refetchActivity}
-          />
+        : ''}
+        <div className={`${isOwner ? 'lg:col-span-3' : 'lg:col-span-5'}`}>
+          <ActivityFeed/>
         </div>
       </div>
     </div>

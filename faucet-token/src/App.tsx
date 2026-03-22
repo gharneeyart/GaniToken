@@ -9,8 +9,6 @@ import "./connection";
 export default function App() {
   const {address, isConnected} = useRunners();
 
- 
-
   return (
     <div className="min-h-screen bg-surface-0 grid-noise relative">
       {/* Subtle background glow */}
@@ -21,7 +19,7 @@ export default function App() {
 
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
         {isConnected && address ? (
-          <Dashboard address={address} />
+          <Dashboard  />
         ) : (
           <ConnectPrompt />
         )}

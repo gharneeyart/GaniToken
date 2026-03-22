@@ -51,7 +51,7 @@ export function StatsRow() {
         isLoading={isLoading}
       />
       <StatCard
-        label="Contract Owner"
+        label={isOwner ? 'Contract Owner' : 'Visitor'}
         value={isOwner ? 'You' : 'Other'}
         sub={isOwner ? 'Mint access enabled' : 'No mint access'}
         icon={Crown}

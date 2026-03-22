@@ -6,17 +6,18 @@ import { Input } from '../ui/Input';
 import { TxStatus } from '../ui/TxStatus';
 import { Badge } from '../ui/Badge';
 import { isValidAddress, formatTokenAmount } from '../../lib/utils';
-import { useTransfer } from '../../hooks';
-import type { UserState, TokenInfo } from '../../types';
 import toast from 'react-hot-toast';
+import { useTransfer } from '../../hooks/specific/useWriteTokenContract';
+import { useReadToken } from '../../hooks/specific/useReadTokenContract';
+import useRunners from '../../hooks/useRunner';
 
 interface TransferPanelProps {
-  userState: UserState;
-  tokenInfo: TokenInfo | null;
   onSuccess: () => void;
 }
 
-export function TransferPanel({ userState, tokenInfo, onSuccess }: TransferPanelProps) {
+export function TransferPanel({ onSuccess }: TransferPanelProps) {
+  const {isConnected} = useRunners();
+  const {symbol, decimals, balance} = useReadToken();
   const [recipient, setRecipient] = useState('');
   const [amountStr, setAmountStr] = useState('');
 
@@ -28,9 +29,6 @@ export function TransferPanel({ userState, tokenInfo, onSuccess }: TransferPanel
     setTimeout(reset, 4000);
   });
 
-  const symbol = tokenInfo?.symbol ?? 'GSK';
-  const decimals = tokenInfo?.decimals ?? 18;
-  const balance = userState.balance;
   const balanceFormatted = formatTokenAmount(balance, decimals, 2);
 
   const recipientError = recipient && !isValidAddress(recipient) ? 'Invalid address' : undefined;
@@ -46,7 +44,7 @@ export function TransferPanel({ userState, tokenInfo, onSuccess }: TransferPanel
       : undefined;
 
   const canTransfer =
-    userState.isConnected &&
+    isConnected &&
     isValidAddress(recipient) &&
     amountBig > 0n &&
     amountBig <= balance &&
@@ -80,7 +78,7 @@ export function TransferPanel({ userState, tokenInfo, onSuccess }: TransferPanel
           Available Balance
         </span>
         <span className="text-sm font-mono font-semibold text-amber-400">
-          {userState.isConnected ? `${balanceFormatted} ${symbol}` : '—'}
+          {isConnected ? `${balanceFormatted} ${symbol}` : '—'}
         </span>
       </div>
 
@@ -91,7 +89,7 @@ export function TransferPanel({ userState, tokenInfo, onSuccess }: TransferPanel
           value={recipient}
           onChange={(e) => setRecipient(e.target.value)}
           error={recipientError}
-          disabled={!userState.isConnected || status.status === 'pending'}
+          disabled={!isConnected || status.status === 'pending'}
         />
         <div className="relative">
           <Input
@@ -111,7 +109,7 @@ export function TransferPanel({ userState, tokenInfo, onSuccess }: TransferPanel
             }
             error={amountError}
             hint={`Balance: ${balanceFormatted} ${symbol}`}
-            disabled={!userState.isConnected || status.status === 'pending'}
+            disabled={!isConnected || status.status === 'pending'}
           />
         </div>
       </div>

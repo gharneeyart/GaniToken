@@ -4,20 +4,22 @@ import { Button } from '../ui/Button';
 import { TxStatus } from '../ui/TxStatus';
 import { Badge } from '../ui/Badge';
 import { cn } from '../../lib/utils';
-import { useCooldown, useRequestToken } from '../../hooks';
-import type { UserState, TokenInfo } from '../../types';
 import toast from 'react-hot-toast';
+import useRunners from '../../hooks/useRunner';
+import { useReadToken, useCooldown } from '../../hooks/specific/useReadTokenContract';
+import { useRequestToken } from '../../hooks/specific/useWriteTokenContract';
+import { formatTokenAmount } from '../../lib/utils';
 
 interface FaucetPanelProps {
-  userState: UserState;
-  tokenInfo: TokenInfo | null;
   onSuccess: () => void;
 }
 
-export function FaucetPanel({ userState, tokenInfo, onSuccess }: FaucetPanelProps) {
-  const cooldown = useCooldown(
-    userState.lastClaimed,
-    tokenInfo?.cooldownSeconds ?? 86400
+export function FaucetPanel({ onSuccess }: FaucetPanelProps) {
+  const {isConnected} = useRunners();
+  const {lastClaimed, cooldown, symbol, claimAmount, decimals} = useReadToken();
+  const cooldownSeconds = useCooldown(
+    lastClaimed,
+    cooldown ?? 86400
   );
 
   const { requestToken, status, reset } = useRequestToken(() => {
@@ -26,16 +28,13 @@ export function FaucetPanel({ userState, tokenInfo, onSuccess }: FaucetPanelProp
     setTimeout(reset, 4000);
   });
 
-  const symbol = tokenInfo?.symbol ?? 'GSK';
-  const isConnected = userState.isConnected;
-
   const handleClaim = async () => {
     if (!isConnected) {
       toast.error('Please connect your wallet first');
       return;
     }
-    if (!cooldown.canClaim) {
-      toast.error(`Try again in ${cooldown.formattedCountdown}`);
+    if (!cooldownSeconds.canClaim) {
+      toast.error(`Try again in ${cooldownSeconds.formattedCountdown}`);
       return;
     }
     try {
@@ -55,7 +54,7 @@ export function FaucetPanel({ userState, tokenInfo, onSuccess }: FaucetPanelProp
       {/* Claim amount display */}
       <div className="flex flex-col gap-1">
         <div className="flex items-baseline gap-2">
-          <span className="font-display text-4xl font-bold text-gradient-emerald">100</span>
+          <span className="font-display text-4xl font-bold text-gradient-emerald">{formatTokenAmount(claimAmount, decimals, 0)}</span>
           <span className="font-mono text-lg text-text-secondary">{symbol}</span>
         </div>
         <p className="text-xs text-text-tertiary font-mono">
@@ -68,12 +67,12 @@ export function FaucetPanel({ userState, tokenInfo, onSuccess }: FaucetPanelProp
         <div
           className={cn(
             'rounded-xl px-4 py-3 border flex items-start gap-3 transition-all duration-300',
-            cooldown.canClaim
+            cooldownSeconds.canClaim
               ? 'bg-emerald-400/5 border-emerald-400/20'
               : 'bg-amber-400/5 border-amber-400/20'
           )}
         >
-          {cooldown.canClaim ? (
+          {cooldownSeconds.canClaim ? (
             <>
               <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
               <div>
@@ -91,7 +90,7 @@ export function FaucetPanel({ userState, tokenInfo, onSuccess }: FaucetPanelProp
                   Retry in
                 </p>
                 <p className="text-base font-mono font-semibold text-amber-400 mt-0.5 tabular-nums">
-                  {cooldown.formattedCountdown}
+                  {cooldownSeconds.formattedCountdown}
                 </p>
                 <p className="text-[10px] font-mono text-text-tertiary mt-1">
                   Countdown is specific to your wallet
@@ -122,11 +121,11 @@ export function FaucetPanel({ userState, tokenInfo, onSuccess }: FaucetPanelProp
         fullWidth
         isLoading={status.status === 'pending'}
         loadingText="Claiming tokens…"
-        disabled={!isConnected || (!cooldown.canClaim && status.status !== 'pending')}
+        disabled={!isConnected || (!cooldownSeconds.canClaim && status.status !== 'pending')}
         onClick={handleClaim}
       >
         <Droplets className="w-4 h-4" />
-        {cooldown.canClaim ? 'Claim 100 GSK' : `Retry in ${cooldown.formattedCountdown}`}
+        {cooldownSeconds.canClaim ? `Claim ${formatTokenAmount(claimAmount, decimals, 0)} ${symbol}` : `Retry in ${cooldownSeconds.formattedCountdown}`}
       </Button>
     </Card>
   );
