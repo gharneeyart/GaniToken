@@ -4,7 +4,7 @@ import { Card, CardHeader, CardTitle } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import { TxStatus } from '../ui/TxStatus';
-import { Badge } from '../ui/Badge';
+// import { Badge } from '../ui/Badge';
 import { isValidAddress, formatTokenAmount } from '../../lib/utils';
 import toast from 'react-hot-toast';
 import { useTransfer } from '../../hooks/specific/useWriteTokenContract';
@@ -69,7 +69,7 @@ export function TransferPanel({ onSuccess }: TransferPanelProps) {
     <Card glow="amber" className="flex flex-col gap-5">
       <CardHeader>
         <CardTitle dot="amber">Transfer</CardTitle>
-        <Badge variant="amber">transfer()</Badge>
+        {/* <Badge variant="amber">transfer()</Badge> */}
       </CardHeader>
 
       {/* Balance display */}

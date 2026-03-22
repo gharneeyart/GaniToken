@@ -28,7 +28,7 @@ export function ConnectPrompt() {
         Connect your wallet
       </h2>
       <p className="text-sm text-text-secondary font-body max-w-sm mb-8 leading-relaxed">
-        Connect to Sepolia testnet to interact with the GaniToken contract
+        Connect to Lisk Sepolia testnet to interact with the GaniToken contract
       </p>
 
       {/* Features */}

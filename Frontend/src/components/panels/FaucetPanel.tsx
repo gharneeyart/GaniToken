@@ -2,7 +2,7 @@ import { Droplets, Timer, CheckCircle2 } from 'lucide-react';
 import { Card, CardHeader, CardTitle } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { TxStatus } from '../ui/TxStatus';
-import { Badge } from '../ui/Badge';
+// import { Badge } from '../ui/Badge';
 import { cn } from '../../lib/utils';
 import toast from 'react-hot-toast';
 import useRunners from '../../hooks/useRunner';
@@ -49,7 +49,7 @@ export function FaucetPanel({ onSuccess }: FaucetPanelProps) {
     <Card glow="emerald" className="flex flex-col gap-5">
       <CardHeader>
         <CardTitle dot="emerald">Faucet</CardTitle>
-        <Badge variant="emerald">requestToken()</Badge>
+        {/* <Badge variant="emerald">requestToken()</Badge> */}
       </CardHeader>
 
       {/* Claim amount display */}

@@ -79,7 +79,7 @@ export function MintPanel({ onSuccess }: MintPanelProps) {
             <Crown className="w-2.5 h-2.5 mr-1" />
             Owner
           </Badge>
-          <Badge variant="violet">mint()</Badge>
+          {/* <Badge variant="violet">mint()</Badge> */}
         </div>
       </CardHeader>
 
