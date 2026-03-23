@@ -45,16 +45,6 @@ export function Navbar() {
               </>
             )}
 
-            {/* AppKit handles connect/disconnect/address display */}
-            {/* {isConnected && address && (
-              <div className="hidden sm:flex items-center gap-2 glass-card rounded-xl px-3 py-2">
-                <div className="w-2 h-2 rounded-full bg-emerald-400" />
-                <span className="font-mono text-xs text-text-secondary">
-                  {shortenAddress(address, 4)}
-                </span>
-              </div>
-            )} */}
-
             {isConnected && address ? (
               <div className="flex items-center gap-1.5">
                 <div className="hidden sm:flex items-center gap-2 glass-card rounded-xl px-3 py-2">
@@ -85,8 +75,6 @@ export function Navbar() {
                 <span>Connect Wallet</span>
               </Button>
             )}
-
-            {/* <appkit-button /> */}
           </div>
         </div>
       </div>

@@ -8,3 +8,4 @@ export const SUPPORTED_CHAIN_ID = 4202;
 export const SUPPORTED_CHAIN_NAME = 'Lisk Sepolia';
 
 export const BLOCK_EXPLORER_URL = 'https://sepolia-blockscout.lisk.com';
+export const BLOCK_NUMBER = 34403711;

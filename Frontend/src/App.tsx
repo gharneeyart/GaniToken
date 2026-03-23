@@ -11,7 +11,6 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-surface-0 grid-noise relative">
-      {/* Subtle background glow */}
       <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-emerald-400/3 blur-[80px] rounded-full pointer-events-none" />
       <div className="fixed bottom-0 right-0 w-[400px] h-[300px] bg-violet-400/3 blur-[100px] rounded-full pointer-events-none" />
 

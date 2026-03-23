@@ -1,9 +1,3 @@
-/**
- * Format a bigint token amount to a human-readable string
- * @param amount  raw bigint (e.g. from contract)
- * @param decimals token decimals (default 18)
- * @param displayDecimals how many decimals to show (default 2)
- */
 export function formatTokenAmount(
   amount: bigint,
   decimals = 18,
@@ -18,18 +12,16 @@ export function formatTokenAmount(
   return `${wholeFormatted}.${fracStr}`;
 }
 
-/**
- * Shorten an Ethereum address: 0x1234…abcd
- */
+
+ //Shorten an Ethereum address: 0x1234…abcd
 export function shortenAddress(address: string, chars = 4): string {
   if (!address) return '';
   return `${address.slice(0, chars + 2)}…${address.slice(-chars)}`;
 }
 
-/**
- * Given a lastClaimed unix timestamp (seconds) and cooldown seconds,
- * returns { canClaim, remainingSeconds }
- */
+
+//  Given a lastClaimed unix timestamp (seconds) and cooldown seconds,
+//  returns { canClaim, remainingSeconds }
 export function getCooldownStatus(
   lastClaimedTimestamp: number,
   cooldownSeconds: number
@@ -41,9 +33,9 @@ export function getCooldownStatus(
   return { canClaim: false, remainingSeconds: cooldownSeconds - elapsed };
 }
 
-/**
- * Format remaining seconds into "Xh Ym Zs"
- */
+
+//Format remaining seconds into "Xh Ym Zs"
+
 export function formatCountdown(totalSeconds: number): string {
   if (totalSeconds <= 0) return '0s';
   const h = Math.floor(totalSeconds / 3600);
@@ -56,9 +48,8 @@ export function formatCountdown(totalSeconds: number): string {
   return parts.join(' ');
 }
 
-/**
- * Format a unix timestamp to a relative time string like "2 mins ago"
- */
+
+//Format a unix timestamp to a relative time string like "2 mins ago"
 export function timeAgo(timestamp: number): string {
   const diff = Math.floor(Date.now() / 1000) - timestamp;
   if (diff < 60) return `${diff}s ago`;
@@ -67,31 +58,23 @@ export function timeAgo(timestamp: number): string {
   return `${Math.floor(diff / 86400)}d ago`;
 }
 
-/**
- * Calculate supply percentage for progress bar
- */
+//Calculate supply percentage for progress bar
 export function supplyPercent(totalSupply: bigint, maxSupply: bigint): number {
   if (maxSupply === 0n) return 0;
   return Number((totalSupply * 10000n) / maxSupply) / 100;
 }
 
-/**
- * Build block explorer URL for a tx hash
- */
+//Build block explorer URL for a tx hash
 export function explorerTxUrl(hash: string, baseUrl: string): string {
   return `${baseUrl}/tx/${hash}`;
 }
 
-/**
- * Validate an Ethereum address
- */
+//Validate an Ethereum address
 export function isValidAddress(address: string): boolean {
   return /^0x[0-9a-fA-F]{40}$/.test(address);
 }
 
-/**
- * Clsx-lite: join classnames, filtering falsy values
- */
+//Clsx-lite: join classnames, filtering falsy values
 export function cn(...classes: (string | boolean | undefined | null)[]): string {
   return classes.filter(Boolean).join(' ');
 }

@@ -1,5 +1,5 @@
-Step 2: Write the Contract
-Create contracts/FaucetToken.sol. The logic to build in order:
+2: Write the Contract
+Create contracts/GaniToken.sol. The logic to build in order:
 
 Inherit from OpenZeppelin — ERC20, Ownable. This gives you all standard functions for free (transfer, approve, balanceOf, etc).
 Declare constants and state:
@@ -14,7 +14,7 @@ requestToken() — check block.timestamp - lastClaimed[msg.sender] >= COOLDOWN, 
 mint(address to, uint256 amount) — add onlyOwner modifier, check totalSupply() + amount <= MAX_SUPPLY, then _mint(to, amount).
 Constructor — pass name and symbol to ERC20(...), pass msg.sender to Ownable(...). Optionally mint a small initial supply.
 
-Step 3: Write Tests
+3: Write Tests
 Create test/FaucetToken.test.ts. Cover these cases in order:
 For requestToken():
 

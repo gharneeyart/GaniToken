@@ -2,6 +2,7 @@ import { useTokenContract } from "../useContract";
 import { useCallback, useEffect, useState } from "react";
 import useRunners from "../useRunner";
 import type { ActivityItem } from "../../types";
+import { BLOCK_NUMBER } from "../../constants";
 
 export const useReadToken = () => {
   const tokenContract = useTokenContract();
@@ -104,47 +105,58 @@ export const useActivity = () => {
       const mintFilter = tokenContract.filters.TokensMinted(address);
 
       const [sentEvents, receivedEvents, claimEvents, mintEvents] = await Promise.all([
-        tokenContract.queryFilter(sentFilter, -10000),
-        tokenContract.queryFilter(receivedFilter, -10000),
-        tokenContract.queryFilter(claimFilter, -10000),
-        tokenContract.queryFilter(mintFilter, -10000),
+        tokenContract.queryFilter(sentFilter, BLOCK_NUMBER),
+        tokenContract.queryFilter(receivedFilter, BLOCK_NUMBER),
+        tokenContract.queryFilter(claimFilter, BLOCK_NUMBER),
+        tokenContract.queryFilter(mintFilter, BLOCK_NUMBER),
       ]);
 
-      const allItems: ActivityItem[] = [
-        ...claimEvents.map((e: any) => ({
-          id: e.transactionHash + e.logIndex,
-          type: 'claim' as const,
-          amount: e.args.amount,
-          address: e.args.claimant,
-          timestamp: 0,
-          txHash: e.transactionHash,
-        })),
-        ...mintEvents.map((e: any) => ({
-          id: e.transactionHash + e.logIndex,
-          type: 'mint' as const,
-          amount: e.args.amount,
-          address: e.args.to,
-          timestamp: 0,
-          txHash: e.transactionHash,
-        })),
-        ...sentEvents.map((e: any) => ({
-          id: e.transactionHash + e.logIndex,
-          type: 'transfer_out' as const,
-          amount: e.args.value,
-          address: e.args.to,
-          timestamp: 0,
-          txHash: e.transactionHash,
-        })),
-        ...receivedEvents.map((e: any) => ({
-          id: e.transactionHash + e.logIndex,
-          type: 'transfer_in' as const,
-          amount: e.args.value,
-          address: e.args.from,
-          timestamp: 0,
-          txHash: e.transactionHash,
-        })),
+      const allEvents = [
+        ...claimEvents.map((e: any) => ({ e, type: 'claim' as const })),
+        ...mintEvents.map((e: any) => ({ e, type: 'mint' as const })),
+        ...sentEvents.map((e: any) => ({ e, type: 'transfer_out' as const })),
+        ...receivedEvents.map((e: any) => ({ e, type: 'transfer_in' as const })),
       ];
 
+      const claimAndMintHashes = new Set([
+        ...claimEvents.map((e: any) => e.transactionHash),
+        ...mintEvents.map((e: any) => e.transactionHash),
+      ]);
+
+      const deduped = allEvents.filter(({ e, type }) => {
+        if (type === 'transfer_out' || type === 'transfer_in') {
+          return !claimAndMintHashes.has(e.transactionHash);
+        }
+        return true;
+      });
+      const blockNumbers = [...new Set(deduped.map(({ e }) => e.blockNumber))];
+
+      const blocks = await Promise.all(blockNumbers.map((blockNum) =>
+          tokenContract.runner?.provider?.getBlock(blockNum)
+        )
+      );
+
+      const blockMap = new Map(
+        blockNumbers.map((num, i) => [num, blocks[i]?.timestamp ?? 0])
+      );
+
+      const allItems: ActivityItem[] = deduped.map(({ e, type }) => ({
+        id: e.transactionHash + e.logIndex,
+        type,
+        amount: type === 'transfer_out' || type === 'transfer_in'
+          ? e.args.value
+          : e.args.amount,
+        address: type === 'claim'
+          ? e.args.claimant
+          : type === 'mint'
+          ? e.args.to
+          : type === 'transfer_out'
+          ? e.args.to
+          : e.args.from,
+        timestamp: blockMap.get(e.blockNumber) ?? 0,
+        txHash: e.transactionHash,
+      }));
+      
       setItems(allItems.sort((a, b) => b.timestamp - a.timestamp));
     } catch (error) {
       console.error("Error fetching activity:", error);

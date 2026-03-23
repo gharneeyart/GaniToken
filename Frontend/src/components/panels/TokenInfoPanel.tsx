@@ -57,7 +57,6 @@ export function TokenInfoPanel() {
         </Badge>
       </CardHeader>
 
-      {/* Supply ring + basic info in a row */}
       <div className="flex items-center gap-5">
         {isLoading ? (
           <Skeleton className="w-20 h-20 rounded-full flex-shrink-0" />
@@ -113,7 +112,6 @@ export function TokenInfoPanel() {
         />
       </div>
 
-      {/* Contract address link */}
       <div className="flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-white/3 border border-white/8">
         <span className="font-mono text-[10px] text-text-tertiary truncate mr-2">
           {shortenAddress(CONTRACT_ADDRESS, 6)}

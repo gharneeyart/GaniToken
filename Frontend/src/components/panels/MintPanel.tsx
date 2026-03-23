@@ -36,7 +36,6 @@ export function MintPanel({ onSuccess }: MintPanelProps) {
 
  
   const remaining = maxSupply - totalSupply;
-  console.log(remaining);
   
   const remainingFormatted = formatTokenAmount(remaining, decimals, 0);
   const pct = supplyPercent(totalSupply, maxSupply);
@@ -79,11 +78,9 @@ export function MintPanel({ onSuccess }: MintPanelProps) {
             <Crown className="w-2.5 h-2.5 mr-1" />
             Owner
           </Badge>
-          {/* <Badge variant="violet">mint()</Badge> */}
         </div>
       </CardHeader>
 
-      {/* Supply info */}
       <div className="space-y-2">
         <SupplyBar percent={pct} />
         <p className="text-[10px] font-mono text-text-tertiary">

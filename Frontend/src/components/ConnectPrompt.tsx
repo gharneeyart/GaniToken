@@ -4,7 +4,7 @@ import { useAppKit, useAppKitAccount } from "@reown/appkit/react";
 
 const features = [
   { icon: Zap, text: 'Claim 100 GSK every 24 hours' },
-  { icon: Shield, text: 'Standard ERC20 token on Sepolia' },
+  { icon: Shield, text: 'Standard ERC20 token on Lisk Sepolia' },
   { icon: Clock, text: 'Per-wallet cooldown tracking' },
 ];
 
@@ -28,7 +28,7 @@ export function ConnectPrompt() {
         Connect your wallet
       </h2>
       <p className="text-sm text-text-secondary font-body max-w-sm mb-8 leading-relaxed">
-        Connect to Lisk Sepolia testnet to interact with the GaniToken contract
+        Connect to Lisk Sepolia testnet to claim GaniToken Faucet
       </p>
 
       {/* Features */}

@@ -2,7 +2,6 @@ import { Droplets, Timer, CheckCircle2 } from 'lucide-react';
 import { Card, CardHeader, CardTitle } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { TxStatus } from '../ui/TxStatus';
-// import { Badge } from '../ui/Badge';
 import { cn } from '../../lib/utils';
 import toast from 'react-hot-toast';
 import useRunners from '../../hooks/useRunner';
@@ -49,10 +48,8 @@ export function FaucetPanel({ onSuccess }: FaucetPanelProps) {
     <Card glow="emerald" className="flex flex-col gap-5">
       <CardHeader>
         <CardTitle dot="emerald">Faucet</CardTitle>
-        {/* <Badge variant="emerald">requestToken()</Badge> */}
       </CardHeader>
 
-      {/* Claim amount display */}
       <div className="flex flex-col gap-1">
         <div className="flex items-baseline gap-2">
           <span className="font-display text-4xl font-bold text-gradient-emerald">{formatTokenAmount(claimAmount, decimals, 0)}</span>
@@ -63,7 +60,6 @@ export function FaucetPanel({ onSuccess }: FaucetPanelProps) {
         </p>
       </div>
 
-      {/* Cooldown indicator */}
       {isConnected && (
         <div
           className={cn(
@@ -102,7 +98,6 @@ export function FaucetPanel({ onSuccess }: FaucetPanelProps) {
         </div>
       )}
 
-      {/* Not connected state */}
       {!isConnected && (
         <div className="rounded-xl px-4 py-3 border border-white/8 bg-white/3 flex items-center gap-3">
           <Droplets className="w-4 h-4 text-text-tertiary flex-shrink-0" />
@@ -112,10 +107,8 @@ export function FaucetPanel({ onSuccess }: FaucetPanelProps) {
         </div>
       )}
 
-      {/* TX Status */}
       <TxStatus status={status} />
 
-      {/* Action button */}
       <Button
         variant="emerald"
         size="lg"

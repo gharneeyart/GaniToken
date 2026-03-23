@@ -128,7 +128,6 @@ export function ActivityFeed() {
         </button>
       </CardHeader>
 
-      {/* Tabs */}
       <div className="flex items-center gap-1 p-0.5 bg-white/3 rounded-xl border border-white/6 w-fit">
         {TABS.map((tab) => (
           <button
@@ -146,7 +145,6 @@ export function ActivityFeed() {
         ))}
       </div>
 
-      {/* Items */}
       <div className="min-h-[160px]">
         {isLoading ? (
           <div className="space-y-3 pt-1">
@@ -175,7 +173,6 @@ export function ActivityFeed() {
         )}
       </div>
 
-      {/* Badge count */}
       {!isLoading && filtered.length > 0 && (
         <div className="flex justify-end">
           <Badge variant="neutral">{filtered.length} transaction{filtered.length !== 1 ? 's' : ''}</Badge>
